@@ -1,0 +1,56 @@
+/**
+ * edit.php, Hide default date select
+ */
+
+.tablenav select[name="m"] {
+	display: none;
+}
+
+.wp-list-table .column-event-start,
+.wp-list-table .column-event-end {
+	width: 12em;
+}
+
+/**
+ * post.php, post-new.php
+ */
+
+#ui-datepicker-div {
+	box-shadow: 0 0 6px rgba(0,0,0,0.2);
+	display: none;
+	font-family: sans-serif;
+}
+
+#events-toolkit-event-date input.error {
+	background: rgba(255,0,0,0.4);
+	border-color: rgba(255,0,0,0.5);
+	color: #fff;
+	font-weight: bold;
+}
+
+#events-toolkit-event-date label {
+	margin-right: 1em;
+}
+
+#events-toolkit-event-date .all-day-hidden {
+	visibility: hidden;
+}
+
+#events-toolkit-event-date .all-day-visible {
+	visibility: visible !important;
+}
+
+#events-toolkit-event-date input[readonly] {
+	background: #fff;
+}
+
+/**
+ * Hide the Event Date checkbox in Screen Options drawer.
+ * Better do this via a filter, but didn't seem to be as straightforward as I hoped.
+ * See: meta_box_prefs().
+ */
+
+.metabox-prefs label[for="etoolkit-event-date-hide"] {
+	display: none;
+}
+
