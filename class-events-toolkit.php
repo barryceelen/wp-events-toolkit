@@ -567,8 +567,10 @@ class Events_Toolkit {
 
 		if ( 'edit' == $screen->base && self::$options['event_post_type'] == $screen->post_type ) {
 
+			$post_type_obj = get_post_type_object( self::$options['event_post_type'] );
+
 			$options = array(
-				'all'      => __( 'All Events', 'events-toolkit' ),
+				'all'      => $post_type_obj->labels->all_items,
 				'upcoming' => __( 'Upcoming', 'events-toolkit' ),
 				'current'  => __( 'Current', 'events-toolkit' ),
 				'past'     => __( 'Past', 'events-toolkit' ),
