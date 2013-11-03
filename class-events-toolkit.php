@@ -56,7 +56,7 @@ class Events_Toolkit {
 		'settings_version'    => '1',     // Settings version number
 		'event_post_type'     => 'event',
 		'hierarchical'        => false,   // Create hierarchical event post type
-		'all_day_disable'     => true,   // Disable all day events (Not yet implemented)
+		'all_day_disable'     => false,   // Disable all day events
 		'default_all_day'     => true,    // 'All day' is checked by default
 		'default_start_time'  => '10:00',
 		'default_end_time'    => '17:00',
