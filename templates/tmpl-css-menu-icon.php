@@ -19,10 +19,18 @@
 		background: url('<?php echo $images_url; ?>icon.png') no-repeat;
 		background-position: -4px -6px !important;
 	}
-	.mp6 #adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image {
+	#adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image {
 		margin-top: -2px;
 	}
-	.mp6 #adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image:before {
+	#adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image:before {
 		content: '\f145';
+	}
+	.branch-3-6 #adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image,
+	.branch-3-7 #adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image {
+		margin-top: 0;
+	}
+	.branch-3-6 #adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image:before,
+	.branch-3-7 #adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image:before {
+		content: '';
 	}
 </style>
