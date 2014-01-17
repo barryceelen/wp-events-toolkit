@@ -212,8 +212,7 @@ class Events_Toolkit_Admin {
 
 		$html = '<select name="events_toolkit_event_scope">';
 		foreach( $options as $k => $v ) {
-			$selected = ( $k == $event_scope ) ? " selected='selected'" : '';
-			$html .= "<option value='{$k}'{$selected}>{$v}</option>";
+			$html .= "<option value='{$k}' " . selected( $k, $event_scope, false ) . ">{$v}</option>";
 		}
 		$html .= "</select>";
 
