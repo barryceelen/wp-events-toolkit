@@ -82,7 +82,7 @@ class Events_Toolkit_Admin {
 			return;
 		}
 
-	  // Events overview page
+		// Events overview page
 		if ( 'edit' == $screen->base ) {
 			wp_enqueue_style(
 				Events_Toolkit::PLUGIN_SLUG .'-admin-styles',
