@@ -78,19 +78,23 @@ class Events_Toolkit_Admin {
 
 		$screen = get_current_screen();
 
-		if ( $this->args['post_type'] !== $screen->post_type ) {
+		// Return early if we are not on an edit page
+		if ( 'edit' != $screen->base ) {
 			return;
 		}
 
-		// Events overview page
-		if ( 'edit' == $screen->base ) {
-			wp_enqueue_style(
-				Events_Toolkit::PLUGIN_SLUG .'-admin-styles',
-				plugins_url( 'css/admin.css', __FILE__ ),
-				array(),
-				Events_Toolkit::VERSION
-			);
+		// Return early if this screen is not about our post type
+		if ( $this->args['post_type'] != $screen->post_type ) {
+			return;
 		}
+
+		wp_enqueue_style(
+			Events_Toolkit::PLUGIN_SLUG .'-admin-styles',
+			plugins_url( 'css/admin.css', __FILE__ ),
+			array(),
+			Events_Toolkit::VERSION
+		);
+
 	}
 
 	/**
