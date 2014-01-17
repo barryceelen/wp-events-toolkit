@@ -9,7 +9,7 @@
  * @wordpress-plugin
  * Plugin Name: Events Toolkit
  * Plugin URI:  http://github.com/barryceelen/wp-events-toolkit
- * Description: TODO
+ * Description: Registers an event post type and adds related functions to the WordPress admin.
  * Version:     0.0.1
  * Author:      Barry Ceelen
  * Author URI:  http://github.com/barryceelen
