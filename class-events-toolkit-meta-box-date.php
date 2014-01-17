@@ -164,6 +164,8 @@ class Events_Toolkit_Meta_Box_Date {
 
 		global $post;
 
+		wp_nonce_field( plugin_basename( __FILE__ ), 'events_toolkit_save_date_' . $post->ID );
+
 		$all_day_disable = $this->args['all_day_disable'];
 		$start = get_post_meta( $post->ID, '_event_start', true );
 		$end = get_post_meta( $post->ID, '_event_end', true );

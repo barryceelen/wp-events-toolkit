@@ -7,7 +7,6 @@
  * @copyright 2013 Barry Ceelen
  */
 ?>
-<?php wp_nonce_field( plugin_basename( __FILE__ ), 'events_toolkit_save_date_' . $post->ID ); ?>
 <table>
 	<?php do_action( 'events_toolkit_date_form_before' ); ?>
 	<?php if ( $all_day_disable == false ) { ?>
