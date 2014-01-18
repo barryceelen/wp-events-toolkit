@@ -281,8 +281,13 @@ class Events_Toolkit_Meta_Box_Date {
 		}
 
 		// Define start and end times depending on whether the 'All Day' option is selected
-		$start_time = ( isset( $_POST['event-all-day'] ) ) ? ' 00:00:00' : sprintf( " %02d:%02d:00", $_POST['event-start-hh'], $_POST['event-start-mm'] );
-		$end_time   = ( isset( $_POST['event-all-day'] ) ) ? ' 23:59:59' : sprintf( " %02d:%02d:00", $_POST['event-end-hh'], $_POST['event-end-mm'] );
+		if ( isset( $_POST['event-all-day'] ) ) {
+			$start_time = ' 00:00:00';
+			$end_time   = ' 23:59:59';
+		} else {
+			$start_time = sprintf( " %02d:%02d:00", $_POST['event-start-hh'], $_POST['event-start-mm'] );
+			$end_time   = sprintf( " %02d:%02d:00", $_POST['event-end-hh'], $_POST['event-end-mm'] );
+		}
 
 		// Update metadata
 		update_post_meta( $post_id, '_event_start', $_POST['event-start'] . $start_time );
