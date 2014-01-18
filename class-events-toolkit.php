@@ -221,9 +221,10 @@ class Events_Toolkit {
 			$meta_boxes = new Events_Toolkit_Meta_Box_Date();
 			$meta_boxes->init();
 		}
+	}
 
 	/**
-	 * Various admin customization stuff for the default custom post type
+	 * Various admin customisation for the default custom post type
 	 *
 	 * @since  0.0.2
 	 */
