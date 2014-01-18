@@ -22,7 +22,7 @@ class Events_Toolkit_Custom_Post_Type {
 	 *
 	 * @since 0.0.1
 	 */
-	public function __construct( $args = false ) {
+	public function __construct( $args = array() ) {
 
 		$defaults = array(
 			'post_type' => 'event',
