@@ -10,7 +10,7 @@
  * Plugin Name: Events Toolkit
  * Plugin URI:  http://github.com/barryceelen/wp-events-toolkit
  * Description: Registers an event post type and related functionality.
- * Version:     0.0.3
+ * Version:     0.0.2
  * Author:      Barry Ceelen
  * Author URI:  http://github.com/barryceelen
  * Text Domain: events-toolkit
