@@ -40,7 +40,7 @@ class Events_Toolkit_Meta_Box_Date {
 	/**
 	 * Enqueue scripts and styles, add date meta box.
 	 *
-	 * @since 0.0.3
+	 * @since 0.0.2
 	 */
 	public function init() {
 		// Load admin style sheet and JavaScript.
@@ -48,7 +48,7 @@ class Events_Toolkit_Meta_Box_Date {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Add meta box
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 		add_action( 'save_post', array( $this, 'save_post_date' ), 10, 2 );
 	}
 
@@ -87,9 +87,9 @@ class Events_Toolkit_Meta_Box_Date {
 	/**
 	 * Register and enqueue admin-specific JavaScript.
 	 *
-	 * @since     0.0.1
+	 * @since 0.0.1
 	 *
-	 * @return    null    Return early if no settings page is registered.
+	 * @return null Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_scripts() {
 
@@ -139,19 +139,31 @@ class Events_Toolkit_Meta_Box_Date {
 	}
 
 	/**
-	 * Add meta boxes to the custom post type edit screen.
+	 * Add a date meta box to the custom post type edit screen.
 	 *
-	 * @since  0.0.1
+	 * Filter the meta box title via 'events_meta_box_title', eg. in case a plugin
+	 * adds fields to the meta box and the default title would not be appropriate.
+	 *
+	 * @since 0.0.1
 	 */
-	public function add_meta_boxes() {
+	public function add_meta_box() {
 
 		$post_type_object = get_post_type_object( $this->args['post_type'] );
+
+		$title = apply_filters(
+			'events_toolkit_date_meta_box_title',
+			sprintf(
+				_x( '%s Date', 'Date meta box title', 'events-toolkit' ),
+				$post_type_object->labels->singular_name
+			),
+			$this->args['post_type']
+		);
 
 		add_meta_box(
 			// Note: 'events-toolkit-date' is also used in events-toolkit.css, where it hides
 			// the screen options show/hide checkbox for this meta box
 			'events-toolkit-date',
-			sprintf( _x( '%s Date', 'Event date meta box title', 'events-toolkit' ), $post_type_object->labels->singular_name ),
+			$title,
 			array( $this, 'meta_box_date' ),
 			$this->args['post_type'],
 			'normal',
