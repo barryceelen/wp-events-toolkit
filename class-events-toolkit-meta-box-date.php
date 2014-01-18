@@ -19,11 +19,11 @@
 class Events_Toolkit_Meta_Box_Date {
 
 	/**
-	 * Initialize the plugin by setting localization, filters, and administration functions.
+	 * Initialize the class.
 	 *
 	 * @since     0.0.1
 	 */
-	public function __construct( $args = false ) {
+	public function __construct( $args = array() ) {
 
 		$defaults = array(
 			'post_type' => 'event',
@@ -37,6 +37,11 @@ class Events_Toolkit_Meta_Box_Date {
 		$this->args = wp_parse_args( $args, $defaults );
 	}
 
+	/**
+	 * Enqueue scripts and styles, add date meta box.
+	 *
+	 * @since 0.0.3
+	 */
 	public function init() {
 		// Load admin style sheet and JavaScript.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
@@ -65,7 +70,7 @@ class Events_Toolkit_Meta_Box_Date {
 		// Enqueue styles for the jquery ui date picker
 		wp_enqueue_style(
 			Events_Toolkit::PLUGIN_SLUG .'-datepicker-styles',
-			plugins_url( "/js/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom$suffix.css", __FILE__ ),
+			plugins_url( "/js/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom$suffix.css", __FILE__ ),
 			array(),
 			Events_Toolkit::VERSION
 		);
