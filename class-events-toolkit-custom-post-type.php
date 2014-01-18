@@ -58,6 +58,10 @@ class Events_Toolkit_Custom_Post_Type {
 	 */
 	public function register_post_type() {
 
+		if ( post_type_exists( $this->args['post_type'] ) ) {
+			return new WP_Error( 'post_type_exists', sprintf( __( 'The %s custom post type has already been registered.', 'events-toolkit' ), $this->args['post_type'] ) );
+		}
+
 		$labels = array(
 			'name'               => __( 'Events', 'events-toolkit' ),
 			'singular_name'      => __( 'Event', 'events-toolkit' ),
