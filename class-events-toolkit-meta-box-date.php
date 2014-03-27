@@ -247,7 +247,10 @@ class Events_Toolkit_Meta_Box_Date {
 
 		// Verify nonce
 		if (
-			! isset( $_POST['events_toolkit_save_date_' . $post_id] ) || ! wp_verify_nonce( $_POST['events_toolkit_save_date_' . $post_id], plugin_basename( __FILE__ ) ) ) {
+			! isset( $_POST['events_toolkit_save_date_' . $post_id] )
+			||
+			! wp_verify_nonce( $_POST['events_toolkit_save_date_' . $post_id], plugin_basename( __FILE__ ) )
+		) {
 			return $post_id;
 		}
 
@@ -264,6 +267,7 @@ class Events_Toolkit_Meta_Box_Date {
 		}
 
 		// If no start date is set, delete meta values and return
+		// TODO Better force save as draft and notify user
 		if ( ! isset( $_POST['event-start'] ) || '' == $_POST['event-start'] ) {
 			delete_post_meta( $post_id, '_event_start' );
 			delete_post_meta( $post_id, '_event_end' );
