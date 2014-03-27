@@ -20,7 +20,7 @@ class Events_Toolkit_Admin {
 	/**
 	 * Initialize the plugin by setting localization, filters, and administration functions.
 	 *
-	 * @since     0.0.1
+	 * @since 0.0.1
 	 */
 	public function __construct( $args = null ) {
 

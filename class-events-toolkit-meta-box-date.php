@@ -19,11 +19,11 @@
 class Events_Toolkit_Meta_Box_Date {
 
 	/**
-	 * Initialize the plugin by setting localization, filters, and administration functions.
+	 * Initialize the class.
 	 *
 	 * @since     0.0.1
 	 */
-	public function __construct( $args = false ) {
+	public function __construct( $args = array() ) {
 
 		$defaults = array(
 			'post_type' => 'event',
@@ -37,13 +37,18 @@ class Events_Toolkit_Meta_Box_Date {
 		$this->args = wp_parse_args( $args, $defaults );
 	}
 
+	/**
+	 * Enqueue scripts and styles, add date meta box.
+	 *
+	 * @since 0.0.2
+	 */
 	public function init() {
 		// Load admin style sheet and JavaScript.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Add meta box
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 		add_action( 'save_post', array( $this, 'save_post_date' ), 10, 2 );
 	}
 
@@ -65,7 +70,7 @@ class Events_Toolkit_Meta_Box_Date {
 		// Enqueue styles for the jquery ui date picker
 		wp_enqueue_style(
 			Events_Toolkit::PLUGIN_SLUG .'-datepicker-styles',
-			plugins_url( "/js/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom$suffix.css", __FILE__ ),
+			plugins_url( "/js/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom$suffix.css", __FILE__ ),
 			array(),
 			Events_Toolkit::VERSION
 		);
@@ -82,9 +87,9 @@ class Events_Toolkit_Meta_Box_Date {
 	/**
 	 * Register and enqueue admin-specific JavaScript.
 	 *
-	 * @since     0.0.1
+	 * @since 0.0.1
 	 *
-	 * @return    null    Return early if no settings page is registered.
+	 * @return null Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_scripts() {
 
@@ -134,19 +139,31 @@ class Events_Toolkit_Meta_Box_Date {
 	}
 
 	/**
-	 * Add meta boxes to the custom post type edit screen.
+	 * Add a date meta box to the custom post type edit screen.
 	 *
-	 * @since  0.0.1
+	 * Filter the meta box title via 'events_meta_box_title', eg. in case a plugin
+	 * adds fields to the meta box and the default title would not be appropriate.
+	 *
+	 * @since 0.0.1
 	 */
-	public function add_meta_boxes() {
+	public function add_meta_box() {
 
 		$post_type_object = get_post_type_object( $this->args['post_type'] );
+
+		$title = apply_filters(
+			'events_toolkit_date_meta_box_title',
+			sprintf(
+				_x( '%s Date', 'Date meta box title', 'events-toolkit' ),
+				$post_type_object->labels->singular_name
+			),
+			$this->args['post_type']
+		);
 
 		add_meta_box(
 			// Note: 'events-toolkit-date' is also used in events-toolkit.css, where it hides
 			// the screen options show/hide checkbox for this meta box
 			'events-toolkit-date',
-			sprintf( _x( '%s Date', 'Event date meta box title', 'events-toolkit' ), $post_type_object->labels->singular_name ),
+			$title,
 			array( $this, 'meta_box_date' ),
 			$this->args['post_type'],
 			'normal',
@@ -285,8 +302,13 @@ class Events_Toolkit_Meta_Box_Date {
 		}
 
 		// Define start and end times depending on whether the 'All Day' option is selected
-		$start_time = ( isset( $_POST['event-all-day'] ) ) ? ' 00:00:00' : sprintf( " %02d:%02d:00", $_POST['event-start-hh'], $_POST['event-start-mm'] );
-		$end_time   = ( isset( $_POST['event-all-day'] ) ) ? ' 23:59:59' : sprintf( " %02d:%02d:00", $_POST['event-end-hh'], $_POST['event-end-mm'] );
+		if ( isset( $_POST['event-all-day'] ) ) {
+			$start_time = ' 00:00:00';
+			$end_time   = ' 23:59:59';
+		} else {
+			$start_time = sprintf( " %02d:%02d:00", $_POST['event-start-hh'], $_POST['event-start-mm'] );
+			$end_time   = sprintf( " %02d:%02d:00", $_POST['event-end-hh'], $_POST['event-end-mm'] );
+		}
 
 		// Update metadata
 		update_post_meta( $post_id, '_event_start', $_POST['event-start'] . $start_time );

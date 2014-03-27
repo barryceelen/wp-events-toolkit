@@ -24,7 +24,7 @@ class Events_Toolkit {
 	 *
 	 * @var      string
 	 */
-	const VERSION = '0.0.3';
+	const VERSION = '0.0.2';
 
 	/**
 	 * Unique identifier.
@@ -204,7 +204,7 @@ class Events_Toolkit {
 	/**
 	 * Register the default event post type.
 	 *
-	 * @since 0.0.3
+	 * @since 0.0.2
 	 */
 	public function register_default_post_type() {
 		$event = new Events_Toolkit_Custom_Post_Type();
@@ -213,11 +213,23 @@ class Events_Toolkit {
 
 	/**
 	 * Add default event post type date meta box
+	 *
+	 * @since  0.0.2
 	 */
 	public function add_default_post_type_meta_box() {
-		if ( is_admin() ) {
+		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 			$meta_boxes = new Events_Toolkit_Meta_Box_Date();
 			$meta_boxes->init();
+		}
+	}
+
+	/**
+	 * Various admin customisation for the default custom post type
+	 *
+	 * @since  0.0.2
+	 */
+	public function customize_admin_for_default_post_type() {
+		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 			$meta_boxes = new Events_Toolkit_Admin();
 			$meta_boxes->init();
 		}
