@@ -10,7 +10,7 @@
  */
 
 /**
- * Admin functionality for event post type(s).
+ * Mostly event list display and filtering functionality for the admin area.
  *
  * @package Events_Toolkit
  * @author  Barry Ceelen <b@rryceelen.com>
@@ -22,18 +22,17 @@ class Events_Toolkit_Admin {
 	 *
 	 * @since 0.0.1
 	 */
-	public function __construct( $args = null ) {
+	public function __construct( $post_type, $args = array() ) {
 
-		$defaults = array(
-			'post_type' => 'event',
-		);
+		$this->post_type = $post_type;
+
+		$defaults = array(); // TODO
 
 		$this->args = wp_parse_args( $args, $defaults );
+
 	}
 
-	function init() {
-		// Load admin style sheet
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
+	public function init() {
 
 		// Add query vars for event filtering
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
@@ -41,7 +40,7 @@ class Events_Toolkit_Admin {
 		// Modify requests to enable ordering and scope
 		add_filter( 'request', array( $this, 'orderby_and_scope' ) );
 
-		// Add filter to event post type list in admin
+		// Add filter dropdown to event post type list in admin
 		add_action( 'restrict_manage_posts', array( $this, 'add_event_scope_select' ) );
 
 		// Remove quick edit for non-hierarchical event post type
@@ -52,49 +51,19 @@ class Events_Toolkit_Admin {
 
 		// Edit columns in admin table
 		add_filter(
-			'manage_' . $this->args['post_type'] . '_posts_columns',
+			'manage_' . $this->post_type . '_posts_columns',
 			array( $this, 'manage_columns' )
 		);
 		add_action(
-			'manage_' . $this->args['post_type'] . '_posts_custom_column',
+			'manage_' . $this->post_type . '_posts_custom_column',
 			array( $this, 'manage_columns_content' ),
 			10,
 			2
 		);
 		add_filter(
-			'manage_edit-' . $this->args['post_type'] . '_sortable_columns',
+			'manage_edit-' . $this->post_type . '_sortable_columns',
 			array( $this, 'make_columns_sortable' )
 		);
-	}
-
-	/**
-	 * Register and enqueue admin-specific style sheet.
-	 *
-	 * @since 0.0.1
-	 *
-	 * @return null Return early if no settings page is registered.
-	 */
-	public function enqueue_admin_styles() {
-
-		$screen = get_current_screen();
-
-		// Return early if we are not on an edit page
-		if ( 'edit' != $screen->base ) {
-			return;
-		}
-
-		// Return early if this screen is not about our post type
-		if ( $this->args['post_type'] != $screen->post_type ) {
-			return;
-		}
-
-		wp_enqueue_style(
-			Events_Toolkit::PLUGIN_SLUG .'-admin-styles',
-			plugins_url( 'css/admin.css', __FILE__ ),
-			array(),
-			Events_Toolkit::VERSION
-		);
-
 	}
 
 	/**
@@ -102,7 +71,7 @@ class Events_Toolkit_Admin {
 	 *
 	 * @since 0.0.1
 	 */
-	function add_query_vars( $query_vars ) {
+	public function add_query_vars( $query_vars ) {
 		if ( is_admin() ) {
 			$query_vars[] = 'events_toolkit_event_scope';
 		}
@@ -131,7 +100,7 @@ class Events_Toolkit_Admin {
 		}
 
 		// Return early if this screen is not about our post type
-		if ( $this->args['post_type'] != $screen->post_type ) {
+		if ( $this->post_type != $screen->post_type ) {
 			return;
 		}
 
@@ -190,11 +159,11 @@ class Events_Toolkit_Admin {
 		}
 
 		// Return early if this screen is not about our post type
-		if ( $this->args['post_type'] != $screen->post_type ) {
+		if ( $this->post_type != $screen->post_type ) {
 			return;
 		}
 
-		$post_type_obj = get_post_type_object( $this->args['post_type'] );
+		$post_type_obj = get_post_type_object( $this->post_type );
 
 		$options = array(
 			'all'      => $post_type_obj->labels->all_items,
@@ -229,7 +198,7 @@ class Events_Toolkit_Admin {
 	 */
 	public function remove_quick_edit( $actions ) {
 		global $post;
-		if ( $this->args['post_type'] == $post->post_type ) {
+		if ( $this->post_type == $post->post_type ) {
 			unset( $actions['inline hide-if-no-js'] );
 		}
 		return $actions;
