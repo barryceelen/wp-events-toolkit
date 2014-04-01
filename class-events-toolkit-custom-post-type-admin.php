@@ -18,7 +18,10 @@
 class Events_Toolkit_Admin {
 
 	/**
-	 * Set the post type.
+	 * Define arguments for this class.
+	 *
+	 * Arguments are filterable via 'events_toolkit_options'
+	 * in the Events_Toolkit class.
 	 *
 	 * @since 0.0.1
 	 */
@@ -26,7 +29,7 @@ class Events_Toolkit_Admin {
 
 		$this->post_type = $post_type;
 
-		$defaults = array(); // TODO
+		$defaults = array(
 			'remove_quick_edit' => true,
 		);
 
@@ -175,6 +178,7 @@ class Events_Toolkit_Admin {
 		);
 
 		// Allow filtering of options
+		// TODO Move to $defaults
 		$options = apply_filters( 'events_toolkit_add_event_scope_select', $options );
 		$event_scope = 'all';
 		if ( get_query_var( 'events_toolkit_event_scope' ) ) {
