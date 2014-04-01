@@ -23,7 +23,7 @@
 		margin-top: -2px;
 	}
 	#adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image:before {
-		content: '\f145';
+		content: '<?php echo $icon; ?>';
 	}
 	.branch-3-6 #adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image,
 	.branch-3-7 #adminmenu #menu-posts-<?php echo $post_type; ?> div.wp-menu-image {

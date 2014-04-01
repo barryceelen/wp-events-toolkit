@@ -18,7 +18,7 @@
 class Events_Toolkit_Admin {
 
 	/**
-	 * Initialize the plugin by setting localization, filters, and administration functions.
+	 * Set the post type.
 	 *
 	 * @since 0.0.1
 	 */
@@ -26,12 +26,13 @@ class Events_Toolkit_Admin {
 
 		$defaults = array(
 			'post_type' => 'event',
+			'remove_quick_edit' => true,
 		);
 
 		$this->args = wp_parse_args( $args, $defaults );
 	}
 
-	function init() {
+	public function init() {
 		// Load admin style sheet
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 
@@ -89,12 +90,11 @@ class Events_Toolkit_Admin {
 		}
 
 		wp_enqueue_style(
-			Events_Toolkit::PLUGIN_SLUG .'-admin-styles',
+			Events_Toolkit::PLUGIN_SLUG .'-' . $this->args['post_type'] . '-admin-styles',
 			plugins_url( 'css/admin.css', __FILE__ ),
 			array(),
 			Events_Toolkit::VERSION
 		);
-
 	}
 
 	/**
@@ -102,7 +102,7 @@ class Events_Toolkit_Admin {
 	 *
 	 * @since 0.0.1
 	 */
-	function add_query_vars( $query_vars ) {
+	public function add_query_vars( $query_vars ) {
 		if ( is_admin() ) {
 			$query_vars[] = 'events_toolkit_event_scope';
 		}
@@ -229,7 +229,7 @@ class Events_Toolkit_Admin {
 	 */
 	public function remove_quick_edit( $actions ) {
 		global $post;
-		if ( $this->args['post_type'] == $post->post_type ) {
+		if ( $this->args['remove_quick_edit'] && $this->args['post_type'] == $post->post_type ) {
 			unset( $actions['inline hide-if-no-js'] );
 		}
 		return $actions;

@@ -60,8 +60,12 @@ class Events_Toolkit {
 		// Register default event post type and filter messages
 		$this->register_default_post_type();
 
-		// Add meta box(es)
-		$this->add_default_post_type_meta_box();
+		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+			// Add meta box(es)
+			$this->add_default_post_type_meta_box();
+			// Admin stuff
+			$this->customize_admin_for_default_post_type();
+		}
 	}
 
 	/**
@@ -217,10 +221,8 @@ class Events_Toolkit {
 	 * @since  0.0.2
 	 */
 	public function add_default_post_type_meta_box() {
-		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-			$meta_boxes = new Events_Toolkit_Meta_Box_Date();
-			$meta_boxes->init();
-		}
+		$meta_boxes = new Events_Toolkit_Meta_Box_Date();
+		$meta_boxes->init();
 	}
 
 	/**
@@ -229,10 +231,8 @@ class Events_Toolkit {
 	 * @since  0.0.2
 	 */
 	public function customize_admin_for_default_post_type() {
-		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-			$meta_boxes = new Events_Toolkit_Admin();
-			$meta_boxes->init();
-		}
+		$meta_boxes = new Events_Toolkit_Admin();
+		$meta_boxes->init();
 	}
 
 }

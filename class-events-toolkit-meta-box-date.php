@@ -21,7 +21,7 @@ class Events_Toolkit_Meta_Box_Date {
 	/**
 	 * Initialize the class.
 	 *
-	 * @since     0.0.1
+	 * @since 0.0.1
 	 */
 	public function __construct( $args = array() ) {
 

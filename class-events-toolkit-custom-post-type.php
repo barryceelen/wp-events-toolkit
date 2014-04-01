@@ -30,6 +30,7 @@ class Events_Toolkit_Custom_Post_Type {
 			'has_archive' => 'events',
 			'hierarchical' => false,
 			'menu_position' => 8,
+			'icon' => '\f145'
 		);
 
 		$this->args = wp_parse_args( $args, $defaults );
@@ -47,6 +48,9 @@ class Events_Toolkit_Custom_Post_Type {
 
 		// Add events to 'Right Now' dashboard widget
 		add_action( 'dashboard_glance_items' , array( $this, 'dashboard_glance_items' ) );
+
+		// Add css to admin footer
+		add_action( 'admin_print_scripts' , array( $this, 'admin_print_scripts' ) );
 	}
 
 	/**
@@ -133,6 +137,7 @@ class Events_Toolkit_Custom_Post_Type {
 	 */
 	public function menu_icon() {
 		$post_type  = $this->args['post_type'];
+		$icon = $this->args['icon'];
 		$images_url = plugins_url( 'images/', __FILE__ );
 		require_once( plugin_dir_path( __FILE__ ) . 'templates/tmpl-css-menu-icon.php' );
 	}
@@ -148,21 +153,38 @@ class Events_Toolkit_Custom_Post_Type {
 	 */
 	function dashboard_glance_items() {
 
-		$post_type = get_post_type_object( $this->args['post_type'] );
-		$num_posts = wp_count_posts( $post_type->name );
-		$num = number_format_i18n( $num_posts->publish );
-		$text = _n(
-			$post_type->labels->singular_name,
-			$post_type->labels->name,
-			intval( $num_posts->publish )
-		);
-
-		$label = $num . ' ' . $text;
-
-		if ( current_user_can( 'edit_posts' ) ) {
-			$label = "<a href='edit.php?post_type=$post_type->name'>$num $text</a>";
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return;
 		}
 
-		echo '<li class="' . $post_type->name . '-count">' . $label . '</li>';
+		$post_type = get_post_type_object( $this->args['post_type'] );
+		$num_posts = wp_count_posts( $post_type->name );
+		if ( $num_posts && $num_posts->publish ) {
+			$text = _n(
+				'%s ' . $post_type->labels->singular_name,
+				'%s ' . $post_type->labels->name,
+				$num_posts->publish
+			);
+			$text = sprintf( $text, number_format_i18n( $num_posts->publish ) );
+			printf(
+				'<li class="%1$s-count"><a href="edit.php?post_type=%1$s">%2$s</a></li>',
+				$post_type->name,
+				$text
+			);
+		}
+	}
+
+	/**
+	 * Add css to display the 'At A Glance' link icon
+	 *
+	 * @since  0.0.2
+	 */
+	function admin_print_scripts() {
+
+		$screen = get_current_screen();
+
+		if ( 'dashboard' == $screen->base && current_user_can( 'edit_posts' ) ) {
+			echo "<style media='all'>#dashboard_right_now .{$this->args['post_type']}-count a:before { content: '{$this->args['icon']}'; }</style>";
+		}
 	}
 }
