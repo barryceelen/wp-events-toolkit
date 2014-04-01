@@ -18,7 +18,10 @@
 class Events_Toolkit_Custom_Post_Type {
 
 	/**
-	 * Add filter and actions to register our custom post type.
+	 * Define arguments for this class.
+	 *
+	 * Arguments are filterable via 'events_toolkit_options'
+	 * in the Events_Toolkit class.
 	 *
 	 * @since 0.0.1
 	 */
@@ -49,7 +52,8 @@ class Events_Toolkit_Custom_Post_Type {
 			'rewrite'       => array( 'slug' => 'event' ),
 			'has_archive'   => 'events',
 			'menu_position' => 8,
-			'supports'      => array( 'title', 'editor', 'thumbnail' )
+			'supports'      => array( 'title', 'editor', 'thumbnail' ),
+			'icon'          => '\f145',
 		);
 
 		$this->args = wp_parse_args( $args, $defaults );
@@ -65,15 +69,15 @@ class Events_Toolkit_Custom_Post_Type {
 		// Event post type admin menu icon
 		add_action( 'admin_head', array( $this, 'menu_icon' ) );
 
-		// Add events to 'Right Now' dashboard widget
+		// Add events to 'At a Glance' dashboard widget
 		add_action( 'dashboard_glance_items' , array( $this, 'dashboard_glance_items' ) );
+
+		// Change 'At a Glance' icon
+		add_action( 'admin_print_scripts', array( $this, 'dashboard_glance_items_style' ) );
 	}
 
 	/**
 	 * Register post type.
-	 *
-	 * Arguments are filterable via 'events_toolkit_event_post_type_args'
-	 * in the Events_Toolkit class.
 	 *
 	 * @since  0.0.1
 	 */
@@ -137,8 +141,8 @@ class Events_Toolkit_Custom_Post_Type {
 	 * @since 0.0.1
 	 *
 	 * @todo Check for correct capability for edit link.
-	 * @todo Change icon.
 	 * @todo If taxonomies are registered for events, show them as well?
+	 * @todo Is the post type edit link present in post_type_object?
 	 */
 	public function dashboard_glance_items() {
 
@@ -164,16 +168,18 @@ class Events_Toolkit_Custom_Post_Type {
 	}
 
 	/**
-	 * Add css to display the 'At A Glance' link icon
+	 * Add inline style to change the 'At A Glance' link icon.
+	 *
+	 * @todo Load css file in stead?
 	 *
 	 * @since  0.0.2
 	 */
-	function admin_print_scripts() {
+	function dashboard_glance_items_style() {
 
 		$screen = get_current_screen();
 
 		if ( 'dashboard' == $screen->base && current_user_can( 'edit_posts' ) ) {
-			echo "<style media='all'>#dashboard_right_now .{$this->args['post_type']}-count a:before { content: '{$this->args['icon']}'; }</style>";
+			echo "<style media='all'>#dashboard_right_now .{$this->post_type}-count a:before { content: '{$this->args['icon']}'; }</style>";
 		}
 	}
 }
