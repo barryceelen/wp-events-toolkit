@@ -64,6 +64,9 @@ class Events_Toolkit_Custom_Post_Type {
 
 		// Event post type admin menu icon
 		add_action( 'admin_head', array( $this, 'menu_icon' ) );
+
+		// Add events to 'Right Now' dashboard widget
+		add_action( 'dashboard_glance_items' , array( $this, 'dashboard_glance_items' ) );
 	}
 
 	/**
@@ -125,5 +128,34 @@ class Events_Toolkit_Custom_Post_Type {
 		$post_type  = $this->post_type;
 		$images_url = plugins_url( 'images/', __FILE__ );
 		require_once( plugin_dir_path( __FILE__ ) . 'templates/tmpl-css-menu-icon.php' );
+	}
+
+	/**
+	 * Add custom post type to 'At a Glance' dashboard widget.
+	 *
+	 * @since 0.0.1
+	 *
+	 * @todo Check for correct capability for edit link.
+	 * @todo Change icon.
+	 * @todo If taxonomies are registered for events, show them as well?
+	 */
+	public function dashboard_glance_items() {
+
+		$post_type = get_post_type_object( $this->post_type );
+		$num_posts = wp_count_posts( $post_type->name );
+		$num = number_format_i18n( $num_posts->publish );
+		$text = _n(
+			$post_type->labels->singular_name,
+			$post_type->labels->name,
+			intval( $num_posts->publish )
+		);
+
+		$label = $num . ' ' . $text;
+
+		if ( current_user_can( 'edit_posts' ) ) {
+			$label = "<a href='edit.php?post_type=$post_type->name'>$num $text</a>";
+		}
+
+		echo '<li class="' . $post_type->name . '-count">' . $label . '</li>';
 	}
 }
