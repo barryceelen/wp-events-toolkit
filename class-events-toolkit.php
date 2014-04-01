@@ -51,6 +51,15 @@ class Events_Toolkit {
 	 */
 	private function __construct() {
 
+		$defaults = array(
+			'post_type' => 'event',
+			'custom_post_type' => array(),
+			'meta_box_date' => array(),
+			'admin' => array(),
+		);
+
+		$this->options = apply_filters( 'events_toolkit_options', $defaults );
+
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
@@ -58,14 +67,15 @@ class Events_Toolkit {
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
 		// Register default event post type and filter messages
-		$this->register_default_post_type();
+		$this->register_post_type();
 
-		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-			// Add meta box(es)
-			$this->add_default_post_type_meta_box();
-			// Admin stuff
-			$this->customize_admin_for_default_post_type();
-		}
+		// Add date meta box
+		$this->add_date_meta_box();
+
+		// Reorder events in admin, add dates to tables etc.
+	
+	$this->customize_admin_for_default_post_type();
+		
 	}
 
 	/**
@@ -210,29 +220,29 @@ class Events_Toolkit {
 	 *
 	 * @since 0.0.2
 	 */
-	public function register_default_post_type() {
-		$event = new Events_Toolkit_Custom_Post_Type();
-		$event->init();
+	public function register_post_type() {
+		$default_post_type = new Events_Toolkit_Custom_Post_Type( $this->options['post_type'], $this->options['custom_post_type'] );
+		$default_post_type->init();
 	}
 
 	/**
-	 * Add default event post type date meta box
+	 * Add default event post type date meta box.
 	 *
 	 * @since  0.0.2
 	 */
-	public function add_default_post_type_meta_box() {
-		$meta_boxes = new Events_Toolkit_Meta_Box_Date();
-		$meta_boxes->init();
+	public function add_date_meta_box() {
+			$meta_boxes = new Events_Toolkit_Meta_Box_Date( $this->options['post_type'], $this->options['meta_box_date'] );
+			$meta_boxes->init();
 	}
 
 	/**
-	 * Various admin customisation for the default custom post type
+	 * Various admin customizations for the default custom post type.
 	 *
 	 * @since  0.0.2
 	 */
 	public function customize_admin_for_default_post_type() {
-		$meta_boxes = new Events_Toolkit_Admin();
-		$meta_boxes->init();
+			$customize_admin = new Events_Toolkit_Admin( $this->options['post_type'], $this->options['admin'] );
+			$customize_admin->init();
 	}
 
 }

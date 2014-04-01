@@ -23,18 +23,23 @@ class Events_Toolkit_Meta_Box_Date {
 	 *
 	 * @since 0.0.1
 	 */
-	public function __construct( $args = array() ) {
+	public function __construct( $post_type, $args = array() ) {
+
+		$this->post_type = $post_type;
 
 		$defaults = array(
-			'post_type' => 'event',
-			'all_day_disable' => false,
-			'all_day_checked' => true, // 'All day' is checked by default
+			'all_day_disable'    => false,
+			'all_day_checked'    => true, // 'All day' is checked by default
 			'default_start_time' => '10:00',
-			'default_end_time' => '17:00',
-			'clock' => 'auto', // 12 (Shows am/pm select), 24 or auto
+			'default_end_time'   => '17:00',
+			'clock'              => 'auto', // 12 (Shows am/pm select), 24 or auto
+			'title'              => '',
+			'context'            => 'normal',
+			'priority'           => 'high',
 		);
 
 		$this->args = wp_parse_args( $args, $defaults );
+
 	}
 
 	/**
@@ -61,7 +66,7 @@ class Events_Toolkit_Meta_Box_Date {
 
 		$screen = get_current_screen();
 
-		if ( $this->args['post_type'] != $screen->id ) {
+		if ( $this->post_type != $screen->id ) {
 			return;
 		}
 
@@ -78,7 +83,7 @@ class Events_Toolkit_Meta_Box_Date {
 		// Enqueue Events Toolkit styles
 		wp_enqueue_style(
 			Events_Toolkit::PLUGIN_SLUG .'-meta-box-date-styles',
-			plugins_url( 'css/admin.css', __FILE__ ),
+			plugins_url( 'css/meta-box-date.css', __FILE__ ),
 			array(),
 			Events_Toolkit::VERSION
 		);
@@ -95,7 +100,7 @@ class Events_Toolkit_Meta_Box_Date {
 
 		$screen = get_current_screen();
 
-		if ( $this->args['post_type'] !== $screen->id ) {
+		if ( $this->post_type !== $screen->id ) {
 			return;
 		}
 
@@ -148,26 +153,27 @@ class Events_Toolkit_Meta_Box_Date {
 	 */
 	public function add_meta_box() {
 
-		$post_type_object = get_post_type_object( $this->args['post_type'] );
+		// If the meta box title is not set,
+		// use the singular name via the custom post type object
+		if ( '' == $this->args['title'] ) {
 
-		$title = apply_filters(
-			'events_toolkit_date_meta_box_title',
-			sprintf(
+			$post_type_object = get_post_type_object( $this->post_type );
+			$this->args['title'] = sprintf(
 				_x( '%s Date', 'Date meta box title', 'events-toolkit' ),
 				$post_type_object->labels->singular_name
-			),
-			$this->args['post_type']
-		);
+			);
 
+		}
+
+		// Note: 'events-toolkit-date' is also used in events-toolkit.css,
+		// where it hides the screen options show/hide checkbox for this meta box
 		add_meta_box(
-			// Note: 'events-toolkit-date' is also used in events-toolkit.css, where it hides
-			// the screen options show/hide checkbox for this meta box
 			'events-toolkit-date',
-			$title,
+			$this->args['title'],
 			array( $this, 'meta_box_date' ),
-			$this->args['post_type'],
-			'normal',
-			'high'
+			$this->post_type,
+			$this->args['context'],
+			$this->args['priority']
 		);
 	}
 
@@ -264,7 +270,10 @@ class Events_Toolkit_Meta_Box_Date {
 
 		// Verify nonce
 		if (
-			! isset( $_POST['events_toolkit_save_date_' . $post_id] ) || ! wp_verify_nonce( $_POST['events_toolkit_save_date_' . $post_id], plugin_basename( __FILE__ ) ) ) {
+			! isset( $_POST['events_toolkit_save_date_' . $post_id] )
+			||
+			! wp_verify_nonce( $_POST['events_toolkit_save_date_' . $post_id], plugin_basename( __FILE__ ) )
+		) {
 			return $post_id;
 		}
 
@@ -281,6 +290,7 @@ class Events_Toolkit_Meta_Box_Date {
 		}
 
 		// If no start date is set, delete meta values and return
+		// TODO Better force save as draft and notify user
 		if ( ! isset( $_POST['event-start'] ) || '' == $_POST['event-start'] ) {
 			delete_post_meta( $post_id, '_event_start' );
 			delete_post_meta( $post_id, '_event_end' );

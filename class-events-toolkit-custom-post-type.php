@@ -10,7 +10,7 @@
  */
 
 /**
- * Create default event post type.
+ * Register default event post type.
  *
  * @package Events_Toolkit
  * @author  Barry Ceelen <b@rryceelen.com>
@@ -22,49 +22,9 @@ class Events_Toolkit_Custom_Post_Type {
 	 *
 	 * @since 0.0.1
 	 */
-	public function __construct( $args = array() ) {
+	public function __construct( $post_type, $args = array() ) {
 
-		$defaults = array(
-			'post_type' => 'event',
-			'rewrite' => array( 'slug' => 'event' ),
-			'has_archive' => 'events',
-			'hierarchical' => false,
-			'menu_position' => 8,
-			'icon' => '\f145'
-		);
-
-		$this->args = wp_parse_args( $args, $defaults );
-	}
-
-	public function init() {
-		// Register custom post type
-		add_action( 'init', array( $this, 'register_post_type' ) );
-
-		// Filter post updated messages
-		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
-
-		// Event post type admin menu icon
-		add_action( 'admin_head', array( $this, 'menu_icon' ) );
-
-		// Add events to 'Right Now' dashboard widget
-		add_action( 'dashboard_glance_items' , array( $this, 'dashboard_glance_items' ) );
-
-		// Add css to admin footer
-		add_action( 'admin_print_scripts' , array( $this, 'admin_print_scripts' ) );
-	}
-
-	/**
-	 * Register post type.
-	 *
-	 * Arguments are filterable via 'events_toolkit_event_post_type_args'
-	 *
-	 * @since  0.0.1
-	 */
-	public function register_post_type() {
-
-		if ( post_type_exists( $this->args['post_type'] ) ) {
-			return new WP_Error( 'post_type_exists', sprintf( __( 'The %s custom post type has already been registered.', 'events-toolkit' ), $this->args['post_type'] ) );
-		}
+		$this->post_type = $post_type;
 
 		$labels = array(
 			'name'               => __( 'Events', 'events-toolkit' ),
@@ -82,19 +42,48 @@ class Events_Toolkit_Custom_Post_Type {
 			'menu_name'          => __( 'Events', 'events-toolkit' )
 		);
 
-		$args = array(
+		$defaults = array(
 			'labels'        => $labels,
 			'public'        => true,
-			'hierarchical'  => $this->args['hierarchical'],
-			'rewrite'       => $this->args['rewrite'],
-			'has_archive'   => $this->args['has_archive'],
-			'menu_position' => $this->args['menu_position'],
+			'hierarchical'  => false,
+			'rewrite'       => array( 'slug' => 'event' ),
+			'has_archive'   => 'events',
+			'menu_position' => 8,
 			'supports'      => array( 'title', 'editor', 'thumbnail' )
 		);
 
-		$args = apply_filters( 'events_toolkit_custom_post_type_args', $args, $this->args['post_type'] );
+		$this->args = wp_parse_args( $args, $defaults );
+	}
 
-		register_post_type( $this->args['post_type'], $args );
+	public function init() {
+		// Register custom post type
+		add_action( 'init', array( $this, 'register_post_type' ) );
+
+		// Filter post updated messages
+		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
+
+		// Event post type admin menu icon
+		add_action( 'admin_head', array( $this, 'menu_icon' ) );
+
+		// Add events to 'Right Now' dashboard widget
+		add_action( 'dashboard_glance_items' , array( $this, 'dashboard_glance_items' ) );
+	}
+
+	/**
+	 * Register post type.
+	 *
+	 * Arguments are filterable via 'events_toolkit_event_post_type_args'
+	 * in the Events_Toolkit class.
+	 *
+	 * @since  0.0.1
+	 */
+	public function register_post_type() {
+
+		if ( post_type_exists( $this->post_type ) ) {
+			return new WP_Error( 'post_type_exists', sprintf( __( 'The %s custom post type has already been registered.', 'events-toolkit' ), $this->post_type ) );
+		}
+
+		register_post_type( $this->post_type, $this->args );
 	}
 
 	/**
@@ -110,7 +99,7 @@ class Events_Toolkit_Custom_Post_Type {
 
 		global $post, $post_ID;
 
-		$messages[$this->args['post_type']] = array(
+		$messages[$this->post_type] = array(
 			0 => '', // Unused. Messages start at index 1.
 			1 => sprintf( __( 'Event updated. <a href="%s">View event</a>', 'events-toolkit' ), esc_url( get_permalink($post_ID) ) ),
 			2 => __( 'Custom field updated.', 'events-toolkit' ),
@@ -136,7 +125,7 @@ class Events_Toolkit_Custom_Post_Type {
 	 * @since  0.0.1
 	 */
 	public function menu_icon() {
-		$post_type  = $this->args['post_type'];
+		$post_type  = $this->post_type;
 		$icon = $this->args['icon'];
 		$images_url = plugins_url( 'images/', __FILE__ );
 		require_once( plugin_dir_path( __FILE__ ) . 'templates/tmpl-css-menu-icon.php' );
@@ -151,13 +140,13 @@ class Events_Toolkit_Custom_Post_Type {
 	 * @todo Change icon.
 	 * @todo If taxonomies are registered for events, show them as well?
 	 */
-	function dashboard_glance_items() {
+	public function dashboard_glance_items() {
 
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return;
 		}
 
-		$post_type = get_post_type_object( $this->args['post_type'] );
+		$post_type = get_post_type_object( $this->post_type );
 		$num_posts = wp_count_posts( $post_type->name );
 		if ( $num_posts && $num_posts->publish ) {
 			$text = _n(
