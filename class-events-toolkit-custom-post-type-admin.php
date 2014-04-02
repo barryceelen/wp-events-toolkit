@@ -89,19 +89,19 @@ class Events_Toolkit_Admin {
 	public function orderby_and_scope( $vars ) {
 
 		if ( ! is_admin() ) {
-			return;
+			return $vars;
 		}
 
 		$screen = get_current_screen();
 
 		// Return early if we are not on an edit page
 		if ( 'edit' != $screen->base ) {
-			return;
+			return $vars;
 		}
 
 		// Return early if this screen is not about our post type
 		if ( $this->post_type != $screen->post_type ) {
-			return;
+			return $vars;
 		}
 
 		// Seems like we're good to go, to the batmobile!
