@@ -10,7 +10,7 @@
  */
 
 /**
- * Mostly event list display and filtering functionality for the admin area.
+ * Event display order and filtering for edit.php.
  *
  * @package Events_Toolkit
  * @author  Barry Ceelen <b@rryceelen.com>
@@ -105,6 +105,7 @@ class Events_Toolkit_Admin {
 		}
 
 		// Seems like we're good to go, to the batmobile!
+		// @todo Swap if else order
 		if ( ! isset( $vars['orderby'] ) ) {
 			$vars['meta_key'] = '_event_start';
 			$vars['orderby'] = 'meta_value';
@@ -117,6 +118,7 @@ class Events_Toolkit_Admin {
 		}
 
 		// Show past, present, future or all events?
+		// @todo Use meta_query i all three cases?
 		if ( isset( $vars['events_toolkit_event_scope'] ) ) {
 			$now = current_time( 'mysql', 0 );
 			switch ( $vars['events_toolkit_event_scope'] ) {
@@ -142,9 +144,9 @@ class Events_Toolkit_Admin {
 	}
 
 	/**
-	 * Filter events in admin.
+	 * Output <select> element to filter events in admin.
 	 *
-	 * Adds a filter which allows displaying upcoming, current, past or all events.
+	 * Adds a dropdown filter to edit.php which allows displaying upcoming, current, past or all events.
 	 * Via: http://wordpress.stackexchange.com/questions/45/how-to-sort-the-admin-area-of-a-wordpress-custom-post-type-by-a-custom-field
 	 *
 	 * @since 0.0.1
@@ -173,6 +175,7 @@ class Events_Toolkit_Admin {
 		);
 
 		// Allow filtering of options
+		// @todo Remove or improve (eg. allow different default scope) filter
 		$options = apply_filters( 'events_toolkit_add_event_scope_select', $options );
 		$event_scope = 'all';
 		if ( get_query_var( 'events_toolkit_event_scope' ) ) {
