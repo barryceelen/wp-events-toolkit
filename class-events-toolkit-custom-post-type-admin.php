@@ -18,7 +18,10 @@
 class Events_Toolkit_Admin {
 
 	/**
-	 * Initialize the plugin by setting localization, filters, and administration functions.
+	 * Define arguments for this class.
+	 *
+	 * Arguments are filterable via 'events_toolkit_options'
+	 * in the Events_Toolkit class.
 	 *
 	 * @since 0.0.1
 	 */
@@ -26,7 +29,9 @@ class Events_Toolkit_Admin {
 
 		$this->post_type = $post_type;
 
-		$defaults = array(); // TODO
+		$defaults = array(
+			'remove_quick_edit' => true,
+		);
 
 		$this->args = wp_parse_args( $args, $defaults );
 
@@ -175,7 +180,7 @@ class Events_Toolkit_Admin {
 		);
 
 		// Allow filtering of options
-		// @todo Remove or improve (eg. allow different default scope) filter
+		// TODO Move to $defaults
 		$options = apply_filters( 'events_toolkit_add_event_scope_select', $options );
 		$event_scope = 'all';
 		if ( get_query_var( 'events_toolkit_event_scope' ) ) {
@@ -201,7 +206,7 @@ class Events_Toolkit_Admin {
 	 */
 	public function remove_quick_edit( $actions ) {
 		global $post;
-		if ( $this->post_type == $post->post_type ) {
+		if ( $this->args['remove_quick_edit'] && $this->post_type == $post->post_type ) {
 			unset( $actions['inline hide-if-no-js'] );
 		}
 		return $actions;

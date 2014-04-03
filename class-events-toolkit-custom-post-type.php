@@ -18,7 +18,10 @@
 class Events_Toolkit_Custom_Post_Type {
 
 	/**
-	 * Add filter and actions to register our custom post type.
+	 * Define arguments for this class.
+	 *
+	 * Arguments are filterable via 'events_toolkit_options'
+	 * in the Events_Toolkit class.
 	 *
 	 * @since 0.0.1
 	 */
@@ -49,7 +52,8 @@ class Events_Toolkit_Custom_Post_Type {
 			'rewrite'       => array( 'slug' => 'event' ),
 			'has_archive'   => 'events',
 			'menu_position' => 8,
-			'supports'      => array( 'title', 'editor', 'thumbnail' )
+			'supports'      => array( 'title', 'editor', 'thumbnail' ),
+			'icon'          => '\f145',
 		);
 
 		$this->args = wp_parse_args( $args, $defaults );
@@ -65,15 +69,15 @@ class Events_Toolkit_Custom_Post_Type {
 		// Event post type admin menu icon
 		add_action( 'admin_head', array( $this, 'menu_icon' ) );
 
-		// Add events to 'Right Now' dashboard widget
+		// Add events to 'At a Glance' dashboard widget
 		add_action( 'dashboard_glance_items' , array( $this, 'dashboard_glance_items' ) );
+
+		// Change 'At a Glance' icon
+		add_action( 'admin_print_scripts', array( $this, 'dashboard_glance_items_style' ) );
 	}
 
 	/**
 	 * Register post type.
-	 *
-	 * Arguments are filterable via 'events_toolkit_event_post_type_args'
-	 * in the Events_Toolkit class.
 	 *
 	 * @since  0.0.1
 	 */
@@ -126,6 +130,7 @@ class Events_Toolkit_Custom_Post_Type {
 	 */
 	public function menu_icon() {
 		$post_type  = $this->post_type;
+		$icon = $this->args['icon'];
 		$images_url = plugins_url( 'images/', __FILE__ );
 		require_once( plugin_dir_path( __FILE__ ) . 'templates/tmpl-css-menu-icon.php' );
 	}
@@ -136,26 +141,45 @@ class Events_Toolkit_Custom_Post_Type {
 	 * @since 0.0.1
 	 *
 	 * @todo Check for correct capability for edit link.
-	 * @todo Change icon.
 	 * @todo If taxonomies are registered for events, show them as well?
+	 * @todo Is the post type edit link present in post_type_object?
 	 */
 	public function dashboard_glance_items() {
 
-		$post_type = get_post_type_object( $this->post_type );
-		$num_posts = wp_count_posts( $post_type->name );
-		$num = number_format_i18n( $num_posts->publish );
-		$text = _n(
-			$post_type->labels->singular_name,
-			$post_type->labels->name,
-			intval( $num_posts->publish )
-		);
-
-		$label = $num . ' ' . $text;
-
-		if ( current_user_can( 'edit_posts' ) ) {
-			$label = "<a href='edit.php?post_type=$post_type->name'>$num $text</a>";
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return;
 		}
 
-		echo '<li class="' . $post_type->name . '-count">' . $label . '</li>';
+		$post_type = get_post_type_object( $this->post_type );
+		$num_posts = wp_count_posts( $post_type->name );
+		if ( $num_posts && $num_posts->publish ) {
+			$text = _n(
+				'%s ' . $post_type->labels->singular_name,
+				'%s ' . $post_type->labels->name,
+				$num_posts->publish
+			);
+			$text = sprintf( $text, number_format_i18n( $num_posts->publish ) );
+			printf(
+				'<li class="%1$s-count"><a href="edit.php?post_type=%1$s">%2$s</a></li>',
+				$post_type->name,
+				$text
+			);
+		}
+	}
+
+	/**
+	 * Add inline style to change the 'At A Glance' link icon.
+	 *
+	 * @todo Load css file in stead?
+	 *
+	 * @since  0.0.2
+	 */
+	function dashboard_glance_items_style() {
+
+		$screen = get_current_screen();
+
+		if ( 'dashboard' == $screen->base && current_user_can( 'edit_posts' ) ) {
+			echo "<style media='all'>#dashboard_right_now .{$this->post_type}-count a:before { content: '{$this->args['icon']}'; }</style>";
+		}
 	}
 }

@@ -74,6 +74,7 @@ class Events_Toolkit {
 
 		// Reorder events in admin, add dates to tables etc.
 		$this->customize_admin_for_default_post_type();
+
 	}
 
 	/**
@@ -230,8 +231,8 @@ class Events_Toolkit {
 	 */
 	public function add_date_meta_box() {
 		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-			$meta_boxes = new Events_Toolkit_Meta_Box_Date( $this->options['post_type'], $this->options['meta_box_date'] );
-			$meta_boxes->init();
+			$meta_box = new Events_Toolkit_Meta_Box_Date( $this->options['post_type'], $this->options['meta_box_date'] );
+			$meta_box->init();
 		}
 	}
 
