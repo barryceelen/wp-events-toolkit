@@ -74,8 +74,17 @@ class Events_Toolkit_Meta_Box_Date {
 
 		// Enqueue styles for the jquery ui date picker
 		wp_enqueue_style(
-			Events_Toolkit::PLUGIN_SLUG .'-datepicker-styles',
+			Events_Toolkit::PLUGIN_SLUG .'-jquery-ui-datepicker-skins',
 			plugins_url( "/js/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom$suffix.css", __FILE__ ),
+			array(),
+			Events_Toolkit::VERSION
+		);
+
+		// Enqueue WP themed styles for the jquery ui date picker by X-Team
+		// https://github.com/x-team/wp-jquery-ui-datepicker-skins
+		wp_enqueue_style(
+			Events_Toolkit::PLUGIN_SLUG .'-wp-jquery-ui-datepicker-skins',
+			plugins_url( "/css/vendor/wp-jquery-ui-datepicker-skins/datepicker.css", __FILE__ ),
 			array(),
 			Events_Toolkit::VERSION
 		);
