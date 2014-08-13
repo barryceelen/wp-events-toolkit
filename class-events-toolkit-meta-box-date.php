@@ -120,12 +120,23 @@ class Events_Toolkit_Meta_Box_Date {
 		// Maybe load a localized version of jQuery UI
 		// source: https://github.com/jquery/jquery-ui/tree/master/ui/i18n
 		if ( 'en_US' != get_locale() ) {
+			$enqueue = false;
 			$regional = str_replace( '_', '-', get_locale() );
-			$file = plugin_dir_path( __FILE__ ) . "js/vendor/jquery-ui/i18n/jquery.ui.datepicker-$regional.js";
-			if ( is_readable( $file ) ) {
+			$path = "js/vendor/jquery-ui/i18n/jquery.ui.datepicker-$regional.js";
+			if ( is_readable( plugin_dir_path( __FILE__ ) . $file ) ) {
+				$enqueue = true;
+			}
+			if ( false == $enqueue ) {
+				$regional = substr( $regional, 0, 2 );
+				$path = "js/vendor/jquery-ui/i18n/jquery.ui.datepicker-$regional.js";
+				if ( is_readable( plugin_dir_path( __FILE__ ) . $file ) ) {
+					$enqueue = true;
+				}
+			}
+			if ( true == $enqueue ) {
 				wp_enqueue_script(
 					Events_Toolkit::PLUGIN_SLUG .'-datepicker-i18n',
-					plugins_url( "/js/vendor/jquery-ui/i18n/jquery.ui.datepicker-$regional.js", __FILE__ ),
+					plugins_url( $path, __FILE__ ),
 					array(),
 					Events_Toolkit::VERSION
 				);
