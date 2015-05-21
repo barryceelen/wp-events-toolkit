@@ -157,8 +157,9 @@ class Events_Toolkit_Meta_Box_Date {
 			'eventsToolkitVars',
 			array(
 				'disableAllDay' => $this->args['all_day_disable'],
+				'dateFormat'    => $this->date_format_php_to_jquery( get_option( 'date_format' ) ),
+				'firstDay'      => get_option( 'start_of_week' ),
 				'regional'      => $regional,
-				'dateFormat'    => $this->date_format_php_to_jquery( get_option( 'date_format' ) )
 			)
 		);
 	}
