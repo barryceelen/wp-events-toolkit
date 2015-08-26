@@ -24,8 +24,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-defined( 'EVENTS_TOOLKIT_PLUGIN_PATH' ) or define( 'EVENTS_TOOLKIT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-defined( 'EVENTS_TOOLKIT_PLUGIN_URL' ) or define( 'EVENTS_TOOLKIT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'EVENTS_TOOLKIT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'EVENTS_TOOLKIT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 	require_once( EVENTS_TOOLKIT_PLUGIN_PATH . 'class-events-toolkit-custom-post-type-admin.php' );
