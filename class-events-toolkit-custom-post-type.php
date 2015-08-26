@@ -131,8 +131,8 @@ class Events_Toolkit_Custom_Post_Type {
 	public function menu_icon() {
 		$post_type  = $this->post_type;
 		$icon = $this->args['icon'];
-		$images_url = plugins_url( 'images/', __FILE__ );
-		require_once( plugin_dir_path( __FILE__ ) . 'templates/tmpl-css-menu-icon.php' );
+		$images_url = EVENTS_TOOLKIT_PLUGIN_URL . 'images/';
+		require_once( EVENTS_TOOLKIT_PLUGIN_PATH . 'templates/tmpl-css-menu-icon.php' );
 	}
 
 	/**
