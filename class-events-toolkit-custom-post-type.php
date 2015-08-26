@@ -54,6 +54,7 @@ class Events_Toolkit_Custom_Post_Type {
 			'menu_position' => 8,
 			'supports'      => array( 'title', 'editor', 'thumbnail' ),
 			'menu_icon'     => 'dashicons-calendar',
+			'glance_icon'   => '\f145',
 		);
 
 		$this->args = wp_parse_args( $args, $defaults );
@@ -164,7 +165,7 @@ class Events_Toolkit_Custom_Post_Type {
 		$screen = get_current_screen();
 
 		if ( 'dashboard' == $screen->base && current_user_can( 'edit_posts' ) ) {
-			echo "<style media='all'>#dashboard_right_now .{$this->post_type}-count a:before { content: '{$this->args['icon']}'; }</style>";
+			echo "<style media='all'>#dashboard_right_now .{$this->post_type}-count a:before { content: '{$this->args['glance_icon']}'; }</style>";
 		}
 	}
 }
