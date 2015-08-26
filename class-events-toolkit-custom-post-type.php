@@ -53,7 +53,7 @@ class Events_Toolkit_Custom_Post_Type {
 			'has_archive'   => 'events',
 			'menu_position' => 8,
 			'supports'      => array( 'title', 'editor', 'thumbnail' ),
-			'icon'          => '\f145',
+			'menu_icon'     => 'dashicons-calendar',
 		);
 
 		$this->args = wp_parse_args( $args, $defaults );
@@ -65,9 +65,6 @@ class Events_Toolkit_Custom_Post_Type {
 
 		// Filter post updated messages
 		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
-
-		// Event post type admin menu icon
-		add_action( 'admin_head', array( $this, 'menu_icon' ) );
 
 		// Add events to 'At a Glance' dashboard widget
 		add_action( 'dashboard_glance_items' , array( $this, 'dashboard_glance_items' ) );
@@ -121,18 +118,6 @@ class Events_Toolkit_Custom_Post_Type {
 			);
 
 		return $messages;
-	}
-
-	/**
-	 * Replace default admin menu and title icons.
-	 *
-	 * @since  0.0.1
-	 */
-	public function menu_icon() {
-		$post_type  = $this->post_type;
-		$icon = $this->args['icon'];
-		$images_url = EVENTS_TOOLKIT_PLUGIN_URL . 'images/';
-		require_once( EVENTS_TOOLKIT_PLUGIN_PATH . 'templates/tmpl-css-menu-icon.php' );
 	}
 
 	/**
