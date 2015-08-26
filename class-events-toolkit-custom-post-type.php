@@ -53,7 +53,8 @@ class Events_Toolkit_Custom_Post_Type {
 			'has_archive'   => 'events',
 			'menu_position' => 8,
 			'supports'      => array( 'title', 'editor', 'thumbnail' ),
-			'icon'          => '\f145',
+			'menu_icon'     => 'dashicons-calendar',
+			'glance_icon'   => '\f145',
 		);
 
 		$this->args = wp_parse_args( $args, $defaults );
@@ -121,18 +122,6 @@ class Events_Toolkit_Custom_Post_Type {
 	}
 
 	/**
-	 * Replace default admin menu and title icons.
-	 *
-	 * @since  0.0.1
-	 */
-	public function menu_icon() {
-		$post_type  = $this->post_type;
-		$icon = $this->args['icon'];
-		$images_url = EVENTS_TOOLKIT_PLUGIN_URL . 'images/';
-		require_once( EVENTS_TOOLKIT_PLUGIN_PATH . 'templates/tmpl-css-menu-icon.php' );
-	}
-
-	/**
 	 * Add custom post type to 'At a Glance' dashboard widget.
 	 *
 	 * @since 0.0.1
@@ -176,7 +165,7 @@ class Events_Toolkit_Custom_Post_Type {
 		$screen = get_current_screen();
 
 		if ( 'dashboard' == $screen->base && current_user_can( 'edit_posts' ) ) {
-			echo "<style media='all'>#dashboard_right_now .{$this->post_type}-count a:before { content: '{$this->args['icon']}'; }</style>";
+			echo "<style media='all'>#dashboard_right_now .{$this->post_type}-count a:before { content: '{$this->args['glance_icon']}'; }</style>";
 		}
 	}
 }
