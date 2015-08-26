@@ -92,7 +92,7 @@ class Events_Toolkit_Meta_Box_Date {
 		// Enqueue Events Toolkit styles
 		wp_enqueue_style(
 			Events_Toolkit::PLUGIN_SLUG .'-meta-box-date-styles',
-			EVENTS_TOOLKIT_PLUGIN_URL . 'css/meta-box-date.css',
+			EVENTS_TOOLKIT_PLUGIN_URL . '/css/meta-box-date.css',
 			array(),
 			Events_Toolkit::VERSION
 		);
