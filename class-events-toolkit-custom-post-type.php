@@ -66,9 +66,6 @@ class Events_Toolkit_Custom_Post_Type {
 		// Filter post updated messages
 		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
 
-		// Event post type admin menu icon
-		add_action( 'admin_head', array( $this, 'menu_icon' ) );
-
 		// Add events to 'At a Glance' dashboard widget
 		add_action( 'dashboard_glance_items' , array( $this, 'dashboard_glance_items' ) );
 
