@@ -18,9 +18,10 @@
 					$startDateInput.datepicker({
 						altField: "#event-start",
 						altFormat: $.datepicker.ISO_8601,
-						dateFormat: dateFormat,
 						autoSize: false,
 						constrainInput: true,
+						dateFormat: dateFormat,
+						firstDay: eventsToolkitVars.firstDay,
 						numberOfMonths: 3,
 						onClose: function( selectedDate ) {
 							$endDateInput.datepicker( "option", "minDate", selectedDate );
@@ -30,9 +31,10 @@
 					$endDateInput.datepicker({
 						altField: "#event-end",
 						altFormat: $.datepicker.ISO_8601,
-						dateFormat: dateFormat,
 						autoSize: false,
 						constrainInput: true,
+						dateFormat: dateFormat,
+						firstDay: eventsToolkitVars.firstDay,
 						minDate: new Date($startDateInput.data("date")),
 						numberOfMonths: 3,
 					});

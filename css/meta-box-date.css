@@ -21,26 +21,26 @@
 	font-family: sans-serif;
 }
 
-#events-toolkit-event-date input.error {
+#events-toolkit-date input.error {
 	background: rgba(255,0,0,0.4);
 	border-color: rgba(255,0,0,0.5);
 	color: #fff;
 	font-weight: bold;
 }
 
-#events-toolkit-event-date label {
+#events-toolkit-date label {
 	margin-right: 1em;
 }
 
-#events-toolkit-event-date .all-day-hidden {
+#events-toolkit-date .all-day-hidden {
 	visibility: hidden;
 }
 
-#events-toolkit-event-date .all-day-visible {
+#events-toolkit-date .all-day-visible {
 	visibility: visible !important;
 }
 
-#events-toolkit-event-date input[readonly] {
+#events-toolkit-date input[readonly] {
 	background: #fff;
 }
 
