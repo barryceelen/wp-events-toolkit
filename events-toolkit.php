@@ -24,13 +24,16 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+define( 'EVENTS_TOOLKIT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'EVENTS_TOOLKIT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
 if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-	require_once( plugin_dir_path( __FILE__ ) . 'class-events-toolkit-custom-post-type-admin.php' );
-	require_once( plugin_dir_path( __FILE__ ) . 'class-events-toolkit-meta-box-date.php' );
+	require_once( EVENTS_TOOLKIT_PLUGIN_PATH . 'class-events-toolkit-custom-post-type-admin.php' );
+	require_once( EVENTS_TOOLKIT_PLUGIN_PATH . 'class-events-toolkit-meta-box-date.php' );
 }
 
-require_once( plugin_dir_path( __FILE__ ) . 'class-events-toolkit-custom-post-type.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'class-events-toolkit.php' );
+require_once( EVENTS_TOOLKIT_PLUGIN_PATH . 'class-events-toolkit-custom-post-type.php' );
+require_once( EVENTS_TOOLKIT_PLUGIN_PATH . 'class-events-toolkit.php' );
 
 // Register hooks that are fired when the plugin is activated and deactivated.
 register_activation_hook( __FILE__, array( 'Events_Toolkit', 'activate' ) );

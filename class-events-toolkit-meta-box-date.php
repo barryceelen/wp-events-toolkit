@@ -75,7 +75,7 @@ class Events_Toolkit_Meta_Box_Date {
 		// Enqueue styles for the jquery ui date picker
 		wp_enqueue_style(
 			Events_Toolkit::PLUGIN_SLUG .'-jquery-ui-datepicker-skins',
-			plugins_url( "/js/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom$suffix.css", __FILE__ ),
+			EVENTS_TOOLKIT_PLUGIN_URL . "/js/vendor/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom$suffix.css",
 			array(),
 			Events_Toolkit::VERSION
 		);
@@ -84,7 +84,7 @@ class Events_Toolkit_Meta_Box_Date {
 		// https://github.com/x-team/wp-jquery-ui-datepicker-skins
 		wp_enqueue_style(
 			Events_Toolkit::PLUGIN_SLUG .'-wp-jquery-ui-datepicker-skins',
-			plugins_url( "/css/vendor/wp-jquery-ui-datepicker-skins/datepicker.css", __FILE__ ),
+			EVENTS_TOOLKIT_PLUGIN_URL . "/css/vendor/wp-jquery-ui-datepicker-skins/datepicker.css",
 			array(),
 			Events_Toolkit::VERSION
 		);
@@ -92,7 +92,7 @@ class Events_Toolkit_Meta_Box_Date {
 		// Enqueue Events Toolkit styles
 		wp_enqueue_style(
 			Events_Toolkit::PLUGIN_SLUG .'-meta-box-date-styles',
-			plugins_url( 'css/meta-box-date.css', __FILE__ ),
+			EVENTS_TOOLKIT_PLUGIN_URL . '/css/meta-box-date.css',
 			array(),
 			Events_Toolkit::VERSION
 		);
@@ -123,20 +123,20 @@ class Events_Toolkit_Meta_Box_Date {
 			$enqueue = false;
 			$regional = str_replace( '_', '-', get_locale() );
 			$path = "js/vendor/jquery-ui/i18n/jquery.ui.datepicker-$regional.js";
-			if ( is_readable( plugin_dir_path( __FILE__ ) . $file ) ) {
+			if ( is_readable( EVENTS_TOOLKIT_PLUGIN_PATH . $file ) ) {
 				$enqueue = true;
 			}
 			if ( false == $enqueue ) {
 				$regional = substr( $regional, 0, 2 );
 				$path = "js/vendor/jquery-ui/i18n/jquery.ui.datepicker-$regional.js";
-				if ( is_readable( plugin_dir_path( __FILE__ ) . $file ) ) {
+				if ( is_readable( EVENTS_TOOLKIT_PLUGIN_PATH . $file ) ) {
 					$enqueue = true;
 				}
 			}
 			if ( true == $enqueue ) {
 				wp_enqueue_script(
 					Events_Toolkit::PLUGIN_SLUG .'-datepicker-i18n',
-					plugins_url( $path, __FILE__ ),
+					EVENTS_TOOLKIT_PLUGIN_URL . $path,
 					array(),
 					Events_Toolkit::VERSION
 				);
@@ -146,7 +146,7 @@ class Events_Toolkit_Meta_Box_Date {
 		// Enqueue admin.js
 		wp_enqueue_script(
 			Events_Toolkit::PLUGIN_SLUG .'-admin-scripts',
-			plugins_url( "/js/admin.js", __FILE__ ),
+			EVENTS_TOOLKIT_PLUGIN_URL . '/js/admin.js',
 			array(),
 			Events_Toolkit::VERSION
 		);
@@ -276,7 +276,7 @@ class Events_Toolkit_Meta_Box_Date {
 		}
 
 		// Load date form template
-		require_once( plugin_dir_path( __FILE__ ) . 'templates/tmpl-meta-box-date.php' );
+		require_once( EVENTS_TOOLKIT_PLUGIN_PATH . 'templates/tmpl-meta-box-date.php' );
 
 	}
 
