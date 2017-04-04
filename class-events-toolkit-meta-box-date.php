@@ -123,13 +123,13 @@ class Events_Toolkit_Meta_Box_Date {
 			$enqueue = false;
 			$regional = str_replace( '_', '-', get_locale() );
 			$path = "js/vendor/jquery-ui/i18n/jquery.ui.datepicker-$regional.js";
-			if ( is_readable( EVENTS_TOOLKIT_PLUGIN_PATH . $file ) ) {
+			if ( is_readable( EVENTS_TOOLKIT_PLUGIN_PATH . $path ) ) {
 				$enqueue = true;
 			}
 			if ( false == $enqueue ) {
 				$regional = substr( $regional, 0, 2 );
 				$path = "js/vendor/jquery-ui/i18n/jquery.ui.datepicker-$regional.js";
-				if ( is_readable( EVENTS_TOOLKIT_PLUGIN_PATH . $file ) ) {
+				if ( is_readable( EVENTS_TOOLKIT_PLUGIN_PATH . $path ) ) {
 					$enqueue = true;
 				}
 			}
